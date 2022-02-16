@@ -1,0 +1,8 @@
+html
+  include includes/header.pug
+  body
+    h1= title
+    p#connection=nickname + " vient d'être inscrit dans la base, voici les scores des autres joueurs"
+  
+    script(src='/socket.io/socket.io.min.js')
+    script(src="/assets/js/script.js")

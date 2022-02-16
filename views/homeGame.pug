@@ -1,0 +1,19 @@
+html
+  include includes/header.pug
+ 
+  body
+    h1= title
+    a(href='/game') Jouez au jeu
+    p#connection='Hello gamer: '+nickname + ". Voici les 5 meilleurs scores des autres joueurs"
+    div(id="scores")
+      each score in scores
+        p
+          b= score.nickname + ' a obtenu : '
+          = ' ' + score.score
+          = ' points le ' +score.date + '.'
+        p
+          = 'Il a joué : '+score.gamingTime + ' minutes.'
+    script(type='text/javascript').
+        
+      localStorage.setItem("nickname", "#{nickname}");
+      localStorage.setItem("token", "#{token}");

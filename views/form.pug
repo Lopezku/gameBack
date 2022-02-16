@@ -1,0 +1,14 @@
+html
+    include includes/header.pug
+    body
+        h1= title
+        form(id="form" action='/home' method='post')
+            label(for='nickname') Pseudonyme
+            input#nickname(type='text' value='' name='nickname')
+            label(for='avatar') Choose a profile picture:
+            input#avatar(type='file' name='avatar' accept='image/png, image/jpeg')
+            p
+            label(for='password') Mot de passe
+            input#password(type='password' name='password')
+            p
+            button(id="btnSubmit", type='submit') Envoyer

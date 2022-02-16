@@ -1,0 +1,10 @@
+html
+  include includes/header.pug
+  body
+      h1= title
+        div Joueurs connectés :
+        ul#players
+        
+        div#question Question :
+          script(src='/socket.io/socket.io.min.js')
+          script(src="/assets/js/script.js")

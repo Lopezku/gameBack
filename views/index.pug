@@ -1,0 +1,16 @@
+html
+  include includes/header.pug
+  body
+    h1= title
+    a(href='/form') Pas encore inscrit?
+    form(id="form" action="/homeGame" method="post")
+      p
+        label(for="nickname") Pseudonyme :
+      p
+        input(type="text", name="nickname", id="nickname")
+      p
+        label(for="password") Password :
+      p
+        input(type="password", name="password", id="password")
+      p
+        input(type="submit", id="btnSubmit", value="Envoyer")

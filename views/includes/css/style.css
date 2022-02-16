@@ -1,0 +1,79 @@
+html,
+body {
+  background-color: #285964;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  width: 90%;
+  text-align: center;
+  padding: 10px;
+  height: 60px;
+  font-family: "Quicksand", sans-serif;
+  color: #63f05e;
+  font-weight: 300;
+  font-size: 54px;
+}
+#btnSubmit {
+  width: 90%;
+  text-align: center;
+  padding: 10px;
+  background-color: #63f05e;
+  color: #fff;
+  font-weight: 300;
+  font-size: 54px;
+}
+#nickname,
+#password,
+#avatar,
+a {
+  width: 90%;
+  text-align: center;
+  padding: 10px;
+  height: 60px;
+  font-family: "Quicksand", sans-serif;
+  color: #63f05e;
+  font-weight: 300;
+  border: 1px dotted white;
+  border-radius: 10px;
+  background: transparent;
+}
+#avatar {
+  font-size: 34px;
+}
+a {
+  font-size: 45px;
+}
+#nickname,
+#password {
+  font-size: 54px;
+}
+#form {
+  font-family: "Quicksand", sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 320px;
+  font-size: 1.5em;
+  color: #ecffe0;
+  height: 30%;
+  text-align: center;
+}
+form label {
+  font-weight: 300;
+  font-size: 54px;
+}
+#scores,
+#connection,
+ul {
+  width: 80%;
+  padding-left: 8%;
+  height: 60px;
+  font-family: "Quicksand", sans-serif;
+  color: #ffffff;
+  font-weight: 200;
+  font-size: 35px;
+}
