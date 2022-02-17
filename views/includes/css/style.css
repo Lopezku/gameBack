@@ -7,7 +7,9 @@ body {
   padding: 0;
 }
 
-h1 {
+h1,
+#players,
+#question {
   width: 90%;
   text-align: center;
   padding: 10px;
@@ -16,6 +18,9 @@ h1 {
   color: #63f05e;
   font-weight: 300;
   font-size: 54px;
+}
+#question {
+  display: flex;
 }
 #btnSubmit {
   width: 90%;
@@ -68,12 +73,47 @@ form label {
 }
 #scores,
 #connection,
-ul {
+ul,
+#instructions #scoreBoard {
   width: 80%;
   padding-left: 8%;
-  height: 60px;
   font-family: "Quicksand", sans-serif;
   color: #ffffff;
+}
+#scores,
+#connection,
+ul,
+#scoreBoard {
   font-weight: 200;
   font-size: 35px;
+}
+#instructions {
+  font-weight: 30px;
+  margin: 10px;
+  font-family: "Quicksand", sans-serif;
+  color: white;
+}
+#connection,
+ul {
+  height: 60px;
+}
+#scoreBoard,
+#scores {
+  margin-top: 40px;
+  height: auto;
+}
+#scores {
+  border: 2px solid #ccdbdf;
+}
+#million {
+  position: absolute;
+  top: 42px;
+  left: 50px;
+  width: 22%;
+}
+#scoreBoard {
+  display: inline;
+}
+#question {
+  margin-left: 200px;
 }

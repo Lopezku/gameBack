@@ -1,26 +1,9 @@
 "use strict";
 let playersConnected = [];
 window.document.addEventListener("DOMContentLoaded", () => {
-  /* jeu de boules*/
-  const canvas = window.document.querySelector("canvas");
   const playersList = window.document.querySelector("ul");
   const questionDiv = window.document.getElementById("question");
-
-  const updateOrCreateSquare = (square) => {
-    let divElement = window.document.getElementById(square.id);
-    if (!divElement) {
-      divElement = window.document.createElement("div");
-      divElement.id = square.id;
-      window.document.body.appendChild(divElement);
-    }
-    divElement.style.top = square.top;
-    divElement.style.left = square.left;
-    divElement.style.width = square.width;
-    divElement.style.height = square.height;
-    divElement.style.position = square.position;
-    divElement.style.backgroundColor = square.backgroundColor;
-    //return divElement;
-  };
+  let clickOnAnswer;
   const playerNickname = localStorage.getItem("nickname");
   const playerToken = localStorage.getItem("token");
   // On créé une instance de WebSocket
@@ -28,15 +11,14 @@ window.document.addEventListener("DOMContentLoaded", () => {
   socket.on("requestNickname", () => {
     socket.emit("responseNickname", { playerNickname, playerToken });
   });
-  socket.on("updateOrCreateSquare", (square) => {
-    const squareElement = updateOrCreateSquare(square);
-  });
   socket.on("listPlayer", (updatedPlayersConnected) => {
     console.log(
       "🚀 ~ file: script.js ~ line 35 ~ socket.on ~ updatedPlayersConnected",
       updatedPlayersConnected
     );
     playersList.innerHTML = "";
+    //removeAllChildNodes(playersList)
+    //removechild
     updatedPlayersConnected.forEach((player) => {
       const playerItem = window.document.createElement("li");
       playerItem.style.listStyle = "none";
@@ -48,19 +30,40 @@ window.document.addEventListener("DOMContentLoaded", () => {
   });
   socket.on("beginRound", ({ question, options, counterRound }) => {
     questionDiv.innerHTML = question;
+    clickOnAnswer = false;
     options.forEach((option, index) => {
       const optionButton = window.document.createElement("button");
       optionButton.id = option;
+      //optionButton.style.display.flex-direction: column";
       optionButton.innerText = option;
+      /*optionButton.disabled = true;*/
       questionDiv.appendChild(optionButton);
+
       optionButton.addEventListener("click", () => {
         console.log({ playerNickname, counterRound, index });
+        //clickOnAnswer = true;
+        const buttons = document.querySelectorAll("button");
+        buttons.forEach((button) => {
+          button.disabled = true;
+        });
+        optionButton.style.backgroundColor = "red";
         socket.emit("sendResponse", { playerNickname, counterRound, index });
       });
     });
   });
 
-  socket.on("endGame", ({ winner, maxScore }) => {
+  socket.on("endGame", ({ winner, maxScore, allScores }) => {
+    console.log(
+      "🚀 ~ file: script.js ~ line 44 ~ socket.on ~ allScores",
+      allScores
+    );
+
+    for (const scorePlayer in allScores) {
+      const playerScore = window.document.createElement("p");
+      playerScore.id = "scoreBoard";
+      playerScore.innerHTML = `${scorePlayer} a obtenu ${allScores[scorePlayer].scorePlayer}`;
+      window.document.body.appendChild(playerScore);
+    }
     if (playerNickname === winner) {
       alert(`${playerNickname} you win with ${maxScore}`);
     } else {
@@ -69,25 +72,5 @@ window.document.addEventListener("DOMContentLoaded", () => {
       );
     }
   });
-
-  socket.on("destroySquare", (square) => {
-    const divElement = window.document.getElementById(square.id);
-    if (divElement) {
-      divElement.parentNode.removeChild(divElement);
-    }
-  });
-
-  /*   socket.on("destroyPlayer", (playerFront) => {
-    const divElement = window.document.getElementById(playerFront);
-    if (divElement) {
-      divElement.parentNode.removeChild(divElement);
-    }
-  }); */
-  window.addEventListener("mousemove", (e) => {
-    const position = {
-      x: e.clientX,
-      y: e.clientY,
-    };
-    socket.emit("mousemove", position);
-  });
+  //divElement.parentNode.removeChild(divElement);
 });

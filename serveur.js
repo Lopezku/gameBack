@@ -15,24 +15,74 @@ const gameSet = {
       options: ["un acteur porno", "un empereur", "un clown", "un pompier"],
       answer: 0,
     },
+    {
+      question: "Qui a volé l'orange du marchand?",
+      options: [
+        "un acteur porno",
+        "un empereur",
+        "un clown",
+        "Maigret est sur le coup",
+      ],
+      answer: 3,
+    },
+    {
+      question: "Qu'est-ce qu'un Physarum polycephalum?",
+      options: [
+        "un champignon",
+        "une maladie",
+        "un blob",
+        "une plante du Pacifique",
+      ],
+      answer: 2,
+    },
+    {
+      question: "Quel est l'équivalent de pouet.coin ?",
+      options: [
+        "pouet[coin]",
+        "pouet['coin']",
+        "pouet.getCoin()",
+        "Aucune des solutions précédentes.",
+      ],
+      answer: 1,
+    },
+    {
+      question: "Depuis quand sont disponibles les arrow functions ?",
+      options: [
+        " JavaScript 1.7",
+        "ECMAScript 6",
+        "ECMAScript 7",
+        "ECMAScript 2018",
+      ],
+      answer: 1,
+    },
+    {
+      question: "Quel est le résultat de parseInt('010',8) ?",
+      options: ["1", "2", "8", "10"],
+      answer: 2,
+    },
+    {
+      question: "Qui a dit 'Solide comme un roc'?",
+      options: ["Faudel", "Goldman", "Depardieu", "Nadiya"],
+      answer: 3,
+    },
   ],
 };
 let currentRound;
-
 const mongodb = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const auth = require("./public/js/auth");
-const user = require("./public/js/user");
 const socketioJwt = require("socketio-jwt");
 
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
+let firstAnswer = true;
 /**
  * Partie HTTP
  */
+
 const app = express();
 const router = express.Router();
 const server = require("http").createServer(app);
@@ -47,16 +97,6 @@ app.get("/form", (request, response) => {
   return response.render("form", {
     title: "Bienvenue à l'inscription du jeu Socket io",
   });
-});
-app.get("/game", (request, response) => {
-  return response.render("game", {
-    title: "Pirahnas Incident!",
-  });
-  /* else {
-    return response.render("index", {
-      title: "Veuillez vous connecter pour jouer",
-    });
-  } */
 });
 
 app.post("/homeGame", (request, response) => {
@@ -144,6 +184,26 @@ app.post("/homeGame", (request, response) => {
       }
     }
   );
+});
+/*app.use("/homeGame/*", (request, response) => {
+  return response.render("game", {
+    title: "Qui veut gagner des pépéttes?",
+  });
+   else {
+    return response.render("index", {
+      title: "Veuillez vous connecter pour jouer",
+    });
+  } Middleware auth
+});*/
+app.get("/homeGame/game", (request, response) => {
+  return response.render("game", {
+    title: "Qui veut gagner des pépéttes?",
+  });
+  /* else {
+    return response.render("index", {
+      title: "Veuillez vous connecter pour jouer",
+    });
+  } */
 });
 app.post("/home", (request, response) => {
   const nickname = request.body.nickname;
@@ -251,6 +311,11 @@ app.get("/", (request, response) => {
     title: "Bienvenue au jeu websocket",
   });
 });
+app.get("/*", (request, response) => {
+  return response.render("error", {
+    title: "Cette page n'existe pas, vous vous êtes trompés de jeu",
+  });
+});
 const httpServer = server.listen(process.env.PORT, () => {
   console.log(`application is running at: ${gameSet.host}:${process.env.PORT}`);
 });
@@ -263,24 +328,113 @@ const httpServer = server.listen(process.env.PORT, () => {
 const io = require("socket.io");
 const Server = io.Server;
 const ioServer = new Server(httpServer);
-const uuid = require("uuid");
+//const uuid = require("uuid");
 
 function beginGame(socket) {
   let counterRound = 0;
-  const idInterval = setInterval(sendRound, 10000);
+  const idInterval = setInterval(sendRound, 6000);
   function sendRound() {
     if (counterRound === gameSet.questions.length) {
       clearInterval(idInterval);
       let maxScore = 0;
       let winner = null;
+      let allScores = gameSet.socketConnexion;
+      console.log("allscores", gameSet.socketConnexion);
       for (const scorePlayer in gameSet.socketConnexion) {
+        console.log(
+          "🚀 ~ file: serveur.js ~ line 326 ~ sendRound ~ scorePlayer",
+          scorePlayer
+        );
+        //allScores.push()
         if (gameSet.socketConnexion[scorePlayer].scorePlayer > maxScore) {
           maxScore = gameSet.socketConnexion[scorePlayer].scorePlayer;
           winner = scorePlayer;
         }
       }
+      //enregistrer scores
+      /*mongodb.MongoClient.connect(
+        process.env.URL_MONGO,
+        {
+          useUnifiedTopology: true,
+        },
+        (error, client) => {
+          if (error) {
+            console.error(error);
+          } else {
+            const db = client.db("WebsocketForm");
+            const collection = db.collection("comments");
+            collection
+              .findOne({ nickname: nickname })
+              .then((item) => {
+                if (item !== null) {
+                  bcrypt
+                    .compare(password, item.password)
+                    .then((valid) => {
+                      if (!valid) {
+                        return response.render("index", {
+                          title: "Password incorrect",
+                        });
+                      }
 
-      socket.emit("endGame", { winner, maxScore });
+                      if (gameSet.socketConnexion[nickname]) {
+                        return response.render("index", {
+                          title:
+                            "Vous êtes déjà connecté dans un autre navigateur",
+                        });
+                      }
+
+                      const token = jwt.sign(
+                        {
+                          exp: Math.floor(Date.now() / 1000) + 60 * 60,
+                          userID: nickname,
+                        },
+                        process.env.TOKEN_KEY
+                      );
+
+                      gameSet.socketConnexion[nickname] = { token };
+                      mongodb.MongoClient.connect(
+                        process.env.URL_MONGO,
+                        {
+                          useUnifiedTopology: true,
+                        },
+                        (error, client) => {
+                          if (error) {
+                            console.error(error);
+                          } else {
+                            const db = client.db("WebsocketForm");
+                            const collection = db.collection("comments");
+                            const cursor = collection
+                              .find({})
+                              .sort({ score: -1 })
+                              .limit(5);
+                            cursor.toArray((error, documents) => {
+                              return response.render("homeGame", {
+                                title: "Bienvenue au jeu websocket",
+                                nickname: nickname,
+                                scores: documents || [],
+                                token: token,
+                              });
+                            });
+                          }
+                        }
+                      );
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                } else {
+                  return response.render("index", {
+                    title: "Password et Identifiant ne correspondent pas",
+                  });
+                }
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+          }
+        }
+      );*/
+      socket.emit("endGame", { winner, maxScore, allScores });
     } else {
       ioServer.emit("beginRound", {
         question: gameSet.questions[counterRound].question,
@@ -305,11 +459,17 @@ ioServer.on("connection", (socket) => {
     socket.on("sendResponse", (data) => {
       console.log("response score");
       if (data.index === gameSet.questions[data.counterRound].answer) {
-        gameSet.socketConnexion[data.playerNickname].scorePlayer += 10;
+        if (!firstAnswer) {
+          gameSet.socketConnexion[data.playerNickname].scorePlayer += 20;
+          firstAnswer = true;
+        } else {
+          gameSet.socketConnexion[data.playerNickname].scorePlayer += 10;
+        }
       }
       console.log(gameSet.socketConnexion);
     });
   });
+  /*gestion plus de deux joueurs?*/
   if (playersConnected.length >= 2) {
     beginGame(socket);
   }
