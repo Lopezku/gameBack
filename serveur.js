@@ -12,13 +12,13 @@ const gameSet = {
     },
     {
       question: "Qui est pascal OP?",
-      options: ["un acteur porno", "un empereur", "un clown", "un pompier"],
+      options: ["un escroc", "un empereur", "un clown", "un pompier"],
       answer: 0,
     },
     {
       question: "Qui a volé l'orange du marchand?",
       options: [
-        "un acteur porno",
+        "Jean-Michel",
         "un empereur",
         "un clown",
         "Maigret est sur le coup",
@@ -308,12 +308,12 @@ app.post("/home", (request, response) => {
 });
 app.get("/", (request, response) => {
   return response.render("index", {
-    title: "Bienvenue au jeu websocket",
+    title: "Qui veut gagner de l'argent en masse?",
   });
 });
 app.get("/*", (request, response) => {
   return response.render("error", {
-    title: "Cette page n'existe pas, vous vous êtes trompés de jeu",
+    title: "Heu... Vous vous êtes trompés de jeu",
   });
 });
 const httpServer = server.listen(process.env.PORT, () => {
@@ -350,6 +350,9 @@ function beginGame(socket) {
           maxScore = gameSet.socketConnexion[scorePlayer].scorePlayer;
           winner = scorePlayer;
         }
+        /*         if (gameSet.socketConnexion[scorePlayer].scorePlayer === maxScore) {
+          winner = null;
+        } */
       }
       //enregistrer scores
       /*mongodb.MongoClient.connect(

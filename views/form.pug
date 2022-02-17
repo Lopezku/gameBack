@@ -4,7 +4,7 @@ html
         h1= title
         form(id="form" action='/home' method='post')
             label(for='nickname') Pseudonyme
-            input#nickname(type='text' value='' name='nickname')
+            input#nickname(type='text' value='' autocomplete='off' name='nickname')
             label(for='avatar') Choose a profile picture:
             input#avatar(type='file' name='avatar' accept='image/png, image/jpeg')
             p

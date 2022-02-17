@@ -4,6 +4,12 @@ window.document.addEventListener("DOMContentLoaded", () => {
   const playersList = window.document.querySelector("ul");
   const questionDiv = window.document.getElementById("question");
   let clickOnAnswer;
+  function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
+  }
+  const divAnswers = window.document.getElementById("answers");
   const playerNickname = localStorage.getItem("nickname");
   const playerToken = localStorage.getItem("token");
   // On créé une instance de WebSocket
@@ -19,6 +25,7 @@ window.document.addEventListener("DOMContentLoaded", () => {
     playersList.innerHTML = "";
     //removeAllChildNodes(playersList)
     //removechild
+    removeAllChildNodes(playersList);
     updatedPlayersConnected.forEach((player) => {
       const playerItem = window.document.createElement("li");
       playerItem.style.listStyle = "none";
@@ -31,13 +38,13 @@ window.document.addEventListener("DOMContentLoaded", () => {
   socket.on("beginRound", ({ question, options, counterRound }) => {
     questionDiv.innerHTML = question;
     clickOnAnswer = false;
+    //removeAllChildNodes(answers);
+    removeAllChildNodes(answers);
     options.forEach((option, index) => {
       const optionButton = window.document.createElement("button");
       optionButton.id = option;
-      //optionButton.style.display.flex-direction: column";
       optionButton.innerText = option;
-      /*optionButton.disabled = true;*/
-      questionDiv.appendChild(optionButton);
+      divAnswers.appendChild(optionButton);
 
       optionButton.addEventListener("click", () => {
         console.log({ playerNickname, counterRound, index });
@@ -46,7 +53,7 @@ window.document.addEventListener("DOMContentLoaded", () => {
         buttons.forEach((button) => {
           button.disabled = true;
         });
-        optionButton.style.backgroundColor = "red";
+        optionButton.style.backgroundColor = "#63f05e";
         socket.emit("sendResponse", { playerNickname, counterRound, index });
       });
     });
@@ -64,12 +71,16 @@ window.document.addEventListener("DOMContentLoaded", () => {
       playerScore.innerHTML = `${scorePlayer} a obtenu ${allScores[scorePlayer].scorePlayer}`;
       window.document.body.appendChild(playerScore);
     }
-    if (playerNickname === winner) {
-      alert(`${playerNickname} you win with ${maxScore}`);
+    if (winner !== null) {
+      if (playerNickname === winner) {
+        alert(`${playerNickname} you win with ${maxScore}`);
+      } else {
+        alert(
+          `${playerNickname} you loose, pas de score. Le winner est : ${winner} avec ${maxScore}`
+        );
+      }
     } else {
-      alert(
-        `${playerNickname} you loose, pas de score. Le winner est : ${winner} avec ${maxScore}`
-      );
+      alert(`${playerNickname}, il n'y a pas de gagnant`);
     }
   });
   //divElement.parentNode.removeChild(divElement);

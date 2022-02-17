@@ -12,16 +12,14 @@ h1,
 #question {
   width: 90%;
   text-align: center;
-  padding: 10px;
-  height: 60px;
+  padding: 3%;
+  height: 8%;
   font-family: "Quicksand", sans-serif;
   color: #63f05e;
   font-weight: 300;
-  font-size: 54px;
+  font-size: 2.5em;
 }
-#question {
-  display: flex;
-}
+
 #btnSubmit {
   width: 90%;
   text-align: center;
@@ -75,17 +73,18 @@ form label {
 #connection,
 ul,
 #instructions #scoreBoard {
-  width: 80%;
+  width: 67%;
   padding-left: 8%;
   font-family: "Quicksand", sans-serif;
   color: #ffffff;
+  margin-left: 8%;
 }
 #scores,
 #connection,
 ul,
 #scoreBoard {
   font-weight: 200;
-  font-size: 35px;
+  font-size: 2em;
 }
 #instructions {
   font-weight: 30px;
@@ -95,7 +94,7 @@ ul,
 }
 #connection,
 ul {
-  height: 60px;
+  height: 20%;
 }
 #scoreBoard,
 #scores {
@@ -114,6 +113,16 @@ ul {
 #scoreBoard {
   display: inline;
 }
-#question {
-  margin-left: 200px;
+#answers {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+#answers button {
+  padding: 2%;
+  display: inline-block;
+  width: 67%;
+  text-align: center;
+  flex-basis: 68%;
+  margin-left: 9%;
 }
