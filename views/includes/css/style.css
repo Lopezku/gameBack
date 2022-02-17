@@ -10,7 +10,8 @@ body {
 h1,
 #players,
 #question {
-  width: 90%;
+  width: 50%;
+  margin-left: 20%;
   text-align: center;
   padding: 3%;
   height: 8%;
