@@ -25,7 +25,7 @@ const gameSet = {
       ],
       answer: 3,
     },
-    {
+    /* {
       question: "Qu'est-ce qu'un Physarum polycephalum?",
       options: [
         "un champignon",
@@ -64,7 +64,7 @@ const gameSet = {
       question: "Qui a dit 'Solide comme un roc'?",
       options: ["Faudel", "Goldman", "Depardieu", "Nadiya"],
       answer: 3,
-    },
+    }, */
   ],
 };
 let currentRound;
@@ -74,7 +74,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const auth = require("./public/js/auth");
 const socketioJwt = require("socketio-jwt");
-
+const { OutilMongoDB } = require("./public/js/outil-mongo");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -98,7 +98,13 @@ app.get("/form", (request, response) => {
     title: "Bienvenue à l'inscription du jeu Socket io",
   });
 });
-
+app.get("/test", (request, response) => {
+  return response.json(gameSet.socketConnexion);
+});
+app.get("/mongo", (request, response) => {
+  OutilMongoDB.instanceCollection("comments");
+  return response.json(gameSet.socketConnexion);
+});
 app.post("/homeGame", (request, response) => {
   const nickname = request.body.nickname;
   const password = request.body.password;
@@ -196,6 +202,8 @@ app.post("/homeGame", (request, response) => {
   } Middleware auth
 });*/
 app.get("/homeGame/game", (request, response) => {
+  const sockets = gameSet.socketConnexion;
+  console.log("line199" + { sockets });
   return response.render("game", {
     title: "Qui veut gagner des pépéttes?",
   });
@@ -332,7 +340,7 @@ const ioServer = new Server(httpServer);
 
 function beginGame(socket) {
   let counterRound = 0;
-  const idInterval = setInterval(sendRound, 6000);
+  const idInterval = setInterval(sendRound, 3000);
   function sendRound() {
     if (counterRound === gameSet.questions.length) {
       clearInterval(idInterval);
@@ -340,6 +348,12 @@ function beginGame(socket) {
       let winner = null;
       let allScores = gameSet.socketConnexion;
       console.log("allscores", gameSet.socketConnexion);
+      let entries = Object.entries(allScores);
+      let sorted = entries.sort((a, b) => b[1] - a[1]);
+      console.log(
+        "🚀 ~ file: serveur.js ~ line 346 ~ sendRound ~ sorted",
+        sorted
+      );
       for (const scorePlayer in gameSet.socketConnexion) {
         console.log(
           "🚀 ~ file: serveur.js ~ line 326 ~ sendRound ~ scorePlayer",

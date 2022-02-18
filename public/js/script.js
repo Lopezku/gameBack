@@ -69,7 +69,7 @@ window.document.addEventListener("DOMContentLoaded", () => {
       const playerScore = window.document.createElement("p");
       playerScore.id = "scoreBoard";
       playerScore.innerHTML = `${scorePlayer} a obtenu ${allScores[scorePlayer].scorePlayer}`;
-      window.document.body.appendChild(playerScore);
+      divAnswers.appendChild(playerScore);
     }
     if (winner !== null) {
       if (playerNickname === winner) {
