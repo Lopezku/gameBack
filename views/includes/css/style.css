@@ -16,7 +16,8 @@ body {
 h1,
 #players,
 #question,
-#containerPlayers {
+#containerPlayers,
+h2 {
   margin-left: 20%;
   font-family: "Quicksand", sans-serif;
   color: #63f05e;
@@ -24,19 +25,23 @@ h1,
 }
 h1,
 #question {
-  width: 50%;
+  width: 52%;
   text-align: center;
   font-size: 2.5em;
 }
-
+h2 {
+  text-align: center;
+  font-size: 2em;
+}
 #btnSubmit {
   width: 90%;
-  text-align: center;
   padding: 10px;
   background-color: #63f05e;
   color: #fff;
   font-weight: 300;
-  font-size: 54px;
+  font-size: 2.5em;
+  margin-left: 1%;
+  border-radius: 10px;
 }
 #nickname,
 #password,
@@ -57,11 +62,11 @@ a {
   font-size: 34px;
 }
 a {
-  font-size: 45px;
+  font-size: 2em;
 }
 #nickname,
 #password {
-  font-size: 54px;
+  font-size: 2em;
 }
 #form {
   font-family: "Quicksand", sans-serif;
@@ -101,9 +106,7 @@ ul,
   font-family: "Quicksand", sans-serif;
   color: white;
 }
-#connection {
-  height: 20%;
-}
+
 #scoreBoard,
 #scores {
   margin-top: 40px;
@@ -118,6 +121,10 @@ ul,
   top: 42px;
   left: 71%;
   width: 22%;
+}
+#error {
+  width: 50%;
+  margin-left: 20%;
 }
 #scoreBoard {
   display: inline;

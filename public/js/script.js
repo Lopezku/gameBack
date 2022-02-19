@@ -23,8 +23,6 @@ window.document.addEventListener("DOMContentLoaded", () => {
       updatedPlayersConnected
     );
     playersList.innerHTML = "";
-    //removeAllChildNodes(playersList)
-    //removechild
     removeAllChildNodes(playersList);
     updatedPlayersConnected.forEach((player) => {
       const playerItem = window.document.createElement("li");
@@ -34,54 +32,57 @@ window.document.addEventListener("DOMContentLoaded", () => {
       playersList.appendChild(playerItem);
     });
     playersConnected = updatedPlayersConnected;
+    console.log(
+      "🚀 ~ file: script.js ~ line 35 ~ socket.on ~ playersConnected",
+      playersConnected
+    );
   });
   socket.on("beginRound", ({ question, options, counterRound }) => {
-    questionDiv.innerHTML = question;
-    clickOnAnswer = false;
-    //removeAllChildNodes(answers);
-    removeAllChildNodes(answers);
-    options.forEach((option, index) => {
-      const optionButton = window.document.createElement("button");
-      optionButton.id = option;
-      optionButton.innerText = option;
-      divAnswers.appendChild(optionButton);
+    if (playersConnected) {
+      questionDiv.innerHTML = question;
+      clickOnAnswer = false;
+      //removeAllChildNodes(answers);
+      removeAllChildNodes(answers);
+      options.forEach((option, index) => {
+        const optionButton = window.document.createElement("button");
+        optionButton.id = option;
+        optionButton.innerText = option;
+        divAnswers.appendChild(optionButton);
 
-      optionButton.addEventListener("click", () => {
-        console.log({ playerNickname, counterRound, index });
-        //clickOnAnswer = true;
-        const buttons = document.querySelectorAll("button");
-        buttons.forEach((button) => {
-          button.disabled = true;
+        optionButton.addEventListener("click", () => {
+          console.log({ playerNickname, counterRound, index });
+          optionButton.style.backgroundColor = "#63f05e";
+          const buttons = document.querySelectorAll("button");
+          buttons.forEach((button) => {
+            button.disabled = true;
+          });
+          return socket.emit("sendResponse", {
+            playerNickname,
+            counterRound,
+            index,
+          });
         });
-        optionButton.style.backgroundColor = "#63f05e";
-        socket.emit("sendResponse", { playerNickname, counterRound, index });
       });
-    });
+    }
   });
 
   socket.on("endGame", ({ winner, maxScore, allScores }) => {
-    console.log(
-      "🚀 ~ file: script.js ~ line 44 ~ socket.on ~ allScores",
-      allScores
-    );
-
-    for (const scorePlayer in allScores) {
+    for (const [player, scorePlayer] of Object.entries(allScores)) {
       const playerScore = window.document.createElement("p");
       playerScore.id = "scoreBoard";
-      playerScore.innerHTML = `${scorePlayer} a obtenu ${allScores[scorePlayer].scorePlayer}`;
+      playerScore.innerHTML = `${player} a obtenu ${scorePlayer}`;
       divAnswers.appendChild(playerScore);
     }
-    if (winner !== null) {
-      if (playerNickname === winner) {
-        alert(`${playerNickname} you win with ${maxScore}`);
-      } else {
-        alert(
-          `${playerNickname} you loose, pas de score. Le winner est : ${winner} avec ${maxScore}`
-        );
-      }
-    } else {
+    console.log("joueur current line 72 client", playerNickname);
+    console.log("joueur winner", winner);
+    if (playerNickname === winner[0]) {
+      alert(`${playerNickname} you win with ${maxScore}`);
+    } else if (winner === null || winner === "egality") {
       alert(`${playerNickname}, il n'y a pas de gagnant`);
+    } else {
+      alert(
+        `${playerNickname}: you loose. Le winner est : ${winner[0]} avec ${maxScore}`
+      );
     }
   });
-  //divElement.parentNode.removeChild(divElement);
 });

@@ -4,6 +4,7 @@ const gameSet = {
   host: "http://localhost",
   port: "7000",
   socketConnexion: {},
+  scores: {},
   questions: [
     {
       question: "Qui est Charlemagne?",
@@ -74,7 +75,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const auth = require("./public/js/auth");
 const socketioJwt = require("socketio-jwt");
-const { OutilMongoDB } = require("./public/js/outil-mongo");
+const OutilMongoDB = require("./public/js/outil-mongo");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -95,15 +96,13 @@ app.set("view engine", "pug");
 app.use("/assets", express.static(`${__dirname}/public`));
 app.get("/form", (request, response) => {
   return response.render("form", {
-    title: "Bienvenue à l'inscription du jeu Socket io",
+    title: "Bienvenue à qui veut gagner de l'argent en masse!",
   });
 });
-app.get("/test", (request, response) => {
-  return response.json(gameSet.socketConnexion);
-});
+
 app.get("/mongo", (request, response) => {
-  OutilMongoDB.instanceCollection("comments");
-  return response.json(gameSet.socketConnexion);
+  //OutilMongoDB.instanceCollection("comments");
+  console.log(OutilMongoDB.instanceCollection("comments"));
 });
 app.post("/homeGame", (request, response) => {
   const nickname = request.body.nickname;
@@ -132,7 +131,7 @@ app.post("/homeGame", (request, response) => {
                       title: "Password incorrect",
                     });
                   }
-
+                  //console.log("line 136", gameSet.socketConnexion[nickname]);
                   if (gameSet.socketConnexion[nickname]) {
                     return response.render("index", {
                       title: "Vous êtes déjà connecté dans un autre navigateur",
@@ -165,7 +164,7 @@ app.post("/homeGame", (request, response) => {
                           .limit(5);
                         cursor.toArray((error, documents) => {
                           return response.render("homeGame", {
-                            title: "Bienvenue au jeu websocket",
+                            title: "Voici le Hall of Fame de ce jeu:",
                             nickname: nickname,
                             scores: documents || [],
                             token: token,
@@ -191,27 +190,18 @@ app.post("/homeGame", (request, response) => {
     }
   );
 });
-/*app.use("/homeGame/*", (request, response) => {
-  return response.render("game", {
-    title: "Qui veut gagner des pépéttes?",
-  });
-   else {
-    return response.render("index", {
-      title: "Veuillez vous connecter pour jouer",
-    });
-  } Middleware auth
-});*/
-app.get("/homeGame/game", (request, response) => {
+app.post("/homeGame/game", (request, response) => {
   const sockets = gameSet.socketConnexion;
   console.log("line199" + { sockets });
-  return response.render("game", {
-    title: "Qui veut gagner des pépéttes?",
-  });
-  /* else {
+  if (request.body.name === gameSet.socketConnexion[request.body.name]) {
+    return response.render("game", {
+      title: "Bienvenue au jeu",
+    });
+  } else {
     return response.render("index", {
       title: "Veuillez vous connecter pour jouer",
     });
-  } */
+  }
 });
 app.post("/home", (request, response) => {
   const nickname = request.body.nickname;
@@ -346,28 +336,17 @@ function beginGame(socket) {
       clearInterval(idInterval);
       let maxScore = 0;
       let winner = null;
-      let allScores = gameSet.socketConnexion;
-      console.log("allscores", gameSet.socketConnexion);
+      let allScores = gameSet.scores;
+      console.log("allscores", gameSet.scores);
       let entries = Object.entries(allScores);
       let sorted = entries.sort((a, b) => b[1] - a[1]);
-      console.log(
-        "🚀 ~ file: serveur.js ~ line 346 ~ sendRound ~ sorted",
-        sorted
-      );
-      for (const scorePlayer in gameSet.socketConnexion) {
-        console.log(
-          "🚀 ~ file: serveur.js ~ line 326 ~ sendRound ~ scorePlayer",
-          scorePlayer
-        );
-        //allScores.push()
-        if (gameSet.socketConnexion[scorePlayer].scorePlayer > maxScore) {
-          maxScore = gameSet.socketConnexion[scorePlayer].scorePlayer;
-          winner = scorePlayer;
-        }
-        /*         if (gameSet.socketConnexion[scorePlayer].scorePlayer === maxScore) {
-          winner = null;
-        } */
+      if (sorted[0][1] === sorted[1][1]) {
+        winner = "egality";
+      } else {
+        winner = sorted[0];
+        maxScore = sorted[0][1];
       }
+
       //enregistrer scores
       /*mongodb.MongoClient.connect(
         process.env.URL_MONGO,
@@ -451,7 +430,7 @@ function beginGame(socket) {
           }
         }
       );*/
-      socket.emit("endGame", { winner, maxScore, allScores });
+      ioServer.emit("endGame", { winner, maxScore, allScores });
     } else {
       ioServer.emit("beginRound", {
         question: gameSet.questions[counterRound].question,
@@ -469,29 +448,34 @@ ioServer.on("connection", (socket) => {
   ioServer.to(socket.id).emit("requestNickname");
 
   socket.on("responseNickname", (data) => {
-    gameSet.socketConnexion[data.playerNickname] = { scorePlayer: 0 };
+    gameSet.scores[data.playerNickname] = 0;
     currentPlayerNickname = data.playerNickname;
     ioServer.emit("listPlayer", Object.keys(gameSet.socketConnexion));
-
+    //essayer de mettre autre part
     socket.on("sendResponse", (data) => {
       console.log("response score");
       if (data.index === gameSet.questions[data.counterRound].answer) {
         if (!firstAnswer) {
-          gameSet.socketConnexion[data.playerNickname].scorePlayer += 20;
+          console.log(
+            "🚀 ~ file: serveur.js ~ line 459 ~ socket.on ~ firstAnswer",
+            firstAnswer
+          );
+          gameSet.scores[data.playerNickname] += 20;
           firstAnswer = true;
         } else {
-          gameSet.socketConnexion[data.playerNickname].scorePlayer += 10;
+          console.log("line466", firstAnswer);
+          gameSet.scores[data.playerNickname] += 10;
         }
       }
-      console.log(gameSet.socketConnexion);
     });
   });
   /*gestion plus de deux joueurs?*/
-  if (playersConnected.length >= 2) {
+  if (playersConnected.length === 2) {
     beginGame(socket);
   }
   socket.on("disconnect", (data) => {
     delete gameSet.socketConnexion[currentPlayerNickname];
+    delete gameSet.scores[currentPlayerNickname];
     ioServer.emit("listPlayer", Object.keys(gameSet.socketConnexion));
   });
 });
