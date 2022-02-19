@@ -5,8 +5,16 @@ html
         form(id="form" action='/home' method='post')
             label(for='nickname') Pseudonyme
             input#nickname(type='text' value='' autocomplete='off' name='nickname')
-            label(for='avatar') Choose a profile picture:
-            input#avatar(type='file' name='avatar' accept='image/png, image/jpeg')
+            p
+            label(for='avatar') Choose a color for your avatar:
+            input#avatar(type='radio' name='color' value='blue')
+            label#avatar(for='blue') Bleu
+            input#avatar(type='radio' name='color' value='red')
+            label#avatar(for='red') Rouge
+            input#avatar(type='radio' name='color' value='green')
+            label#avatar(for='green') Vert
+            input#avatar(type='radio' name='color' value='yellow')
+            label#avatar(for='yellow') Jaune
             p
             label(for='password') Mot de passe
             input#password(type='password' name='password')

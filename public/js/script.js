@@ -32,13 +32,9 @@ window.document.addEventListener("DOMContentLoaded", () => {
       playersList.appendChild(playerItem);
     });
     playersConnected = updatedPlayersConnected;
-    console.log(
-      "🚀 ~ file: script.js ~ line 35 ~ socket.on ~ playersConnected",
-      playersConnected
-    );
   });
   socket.on("beginRound", ({ question, options, counterRound }) => {
-    if (playersConnected) {
+    if (playersConnected.length >= 1) {
       questionDiv.innerHTML = question;
       clickOnAnswer = false;
       //removeAllChildNodes(answers);

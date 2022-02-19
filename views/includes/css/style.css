@@ -45,7 +45,6 @@ h2 {
 }
 #nickname,
 #password,
-#avatar,
 a {
   width: 90%;
   text-align: center;
@@ -59,7 +58,7 @@ a {
   background: transparent;
 }
 #avatar {
-  font-size: 34px;
+  font-size: 1.6em;
 }
 a {
   font-size: 2em;
@@ -81,7 +80,7 @@ a {
 }
 form label {
   font-weight: 300;
-  font-size: 54px;
+  font-size: 1.7em;
 }
 #scores,
 #connection,

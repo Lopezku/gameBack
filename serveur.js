@@ -47,6 +47,26 @@ const gameSet = {
       answer: 1,
     },
     {
+      question: "Quelle ville est la plus élevé en altitude ?",
+      options: [
+        "Cuzco-Pérou",
+        "Shigatsé-Chine",
+        "Potosi-Bolivie",
+        "Seqetat Bota-Éthiopie",
+      ],
+      answer: 3,
+    },
+    {
+      question: "Laquelle de ces équipes n'existent pas ?",
+      options: [
+        "Cairo Syrupmakers",
+        "Thailand Tobacco Monopoly",
+        "Les trappeurs d'hier",
+        "Tillamook Cheesemakers",
+      ],
+      answer: 3,
+    },
+    {
       question: "Depuis quand sont disponibles les arrow functions ?",
       options: [
         " JavaScript 1.7",
@@ -206,9 +226,14 @@ app.post("/homeGame/game", (request, response) => {
 app.post("/home", (request, response) => {
   const nickname = request.body.nickname;
   const password = request.body.password;
+  const color = request.body.color;
+  const avatarImg = `/assets/img/avatar-${color}.png`;
+  console.log(
+    "🚀 ~ file: serveur.js ~ line 210 ~ app.post ~ color",
+    color + "-" + avatarImg
+  );
   const passwordHashed = bcrypt.hashSync(password, salt);
   //const password = myModuleEncrypt(request.body.password);
-  const avatar = request.body.avatar;
   //on checke validité du pseudo
   mongodb.MongoClient.connect(
     process.env.URL_MONGO,
@@ -239,13 +264,16 @@ app.post("/home", (request, response) => {
                   if (error) {
                     console.error(error);
                   } else {
+                    //avatar https://iconarchive.com/search?q=avatar
                     const db = client.db("WebsocketForm");
                     const collection = db.collection("comments");
                     const date = new Date().toLocaleString("fr-FR");
+
                     collection.insertOne({
                       nickname,
                       password: passwordHashed,
                       date,
+                      avatar: avatarImg,
                       score: 0,
                       gamingTime: 0,
                     });
@@ -348,89 +376,45 @@ function beginGame(socket) {
       }
 
       //enregistrer scores
-      /*mongodb.MongoClient.connect(
-        process.env.URL_MONGO,
-        {
-          useUnifiedTopology: true,
-        },
-        (error, client) => {
-          if (error) {
-            console.error(error);
-          } else {
-            const db = client.db("WebsocketForm");
-            const collection = db.collection("comments");
-            collection
-              .findOne({ nickname: nickname })
-              .then((item) => {
-                if (item !== null) {
-                  bcrypt
-                    .compare(password, item.password)
-                    .then((valid) => {
-                      if (!valid) {
-                        return response.render("index", {
-                          title: "Password incorrect",
-                        });
-                      }
-
-                      if (gameSet.socketConnexion[nickname]) {
-                        return response.render("index", {
-                          title:
-                            "Vous êtes déjà connecté dans un autre navigateur",
-                        });
-                      }
-
-                      const token = jwt.sign(
-                        {
-                          exp: Math.floor(Date.now() / 1000) + 60 * 60,
-                          userID: nickname,
-                        },
-                        process.env.TOKEN_KEY
-                      );
-
-                      gameSet.socketConnexion[nickname] = { token };
-                      mongodb.MongoClient.connect(
-                        process.env.URL_MONGO,
-                        {
-                          useUnifiedTopology: true,
-                        },
-                        (error, client) => {
-                          if (error) {
-                            console.error(error);
-                          } else {
-                            const db = client.db("WebsocketForm");
-                            const collection = db.collection("comments");
-                            const cursor = collection
-                              .find({})
-                              .sort({ score: -1 })
-                              .limit(5);
-                            cursor.toArray((error, documents) => {
-                              return response.render("homeGame", {
-                                title: "Bienvenue au jeu websocket",
-                                nickname: nickname,
-                                scores: documents || [],
-                                token: token,
-                              });
-                            });
-                          }
-                        }
-                      );
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                } else {
-                  return response.render("index", {
-                    title: "Password et Identifiant ne correspondent pas",
-                  });
+      for (const player in allScores) {
+        console.log(`${player}: ${allScores[player]}`);
+        mongodb.MongoClient.connect(
+          process.env.URL_MONGO,
+          {
+            useUnifiedTopology: true,
+          },
+          (error, client) => {
+            if (error) {
+              console.error(error);
+            } else {
+              const db = client.db("WebsocketForm");
+              const collection = db.collection("comments");
+              //db.comments.updateOne({nickname:"red"},{$set:{score:}})
+              collection.updateOne(
+                { nickname: player },
+                {
+                  $set: {
+                    score: {
+                      $cond: {
+                        if: { $lte: allScores[player] },
+                        then: allScores[player],
+                      },
+                    },
+                    date: {
+                      $cond: {
+                        if: { $gte: ["$score", allScores[player]] },
+                        then: new Date().toLocaleString("fr-FR"),
+                      },
+                    },
+                  },
                 }
-              })
-              .catch((err) => {
-                console.error(err);
-              });
+              );
+            }
           }
-        }
-      );*/
-      ioServer.emit("endGame", { winner, maxScore, allScores });
+        );
+      }
+      //ioServer envoie deux fois
+      socket.emit("endGame", { winner, maxScore, allScores });
     } else {
       ioServer.emit("beginRound", {
         question: gameSet.questions[counterRound].question,
@@ -455,13 +439,13 @@ ioServer.on("connection", (socket) => {
     socket.on("sendResponse", (data) => {
       console.log("response score");
       if (data.index === gameSet.questions[data.counterRound].answer) {
-        if (!firstAnswer) {
+        if (firstAnswer) {
           console.log(
             "🚀 ~ file: serveur.js ~ line 459 ~ socket.on ~ firstAnswer",
             firstAnswer
           );
           gameSet.scores[data.playerNickname] += 20;
-          firstAnswer = true;
+          firstAnswer = false;
         } else {
           console.log("line466", firstAnswer);
           gameSet.scores[data.playerNickname] += 10;

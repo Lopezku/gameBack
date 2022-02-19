@@ -9,7 +9,8 @@ html
     div(id="scores")
       each score in scores
         p
-          b= score.nickname + ' a obtenu : '
+          img(src=score.avatar)
+          b= '*****'+score.nickname + ' a obtenu : '
           = ' ' + score.score
           = ' points le ' +score.date + '.'
         p
