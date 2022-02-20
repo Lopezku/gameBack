@@ -60,6 +60,10 @@ a {
 #avatar {
   font-size: 1.6em;
 }
+.playerContainer {
+  font-size: 1.2em;
+  display: inline-block;
+}
 a {
   font-size: 2em;
 }
@@ -110,7 +114,7 @@ ul,
 #scores {
   margin-top: 40px;
   height: auto;
-  flex-basis: 16%;
+  margin-left: 6%;
 }
 #scores {
   border: 2px solid #ccdbdf;

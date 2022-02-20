@@ -5,7 +5,7 @@ const gameSet = {
   port: "7000",
   socketConnexion: {},
   scores: {},
-  scoresMongo: {},
+  scoresMongo: [],
   avatarPlayer: {},
   questions: [
     {
@@ -226,16 +226,17 @@ app.post("/homeGame/game", (request, response) => {
         const collection = db.collection("comments");
         const cursor = collection.find({});
         cursor.toArray((error, documents) => {
-          if (
-            request.body.name === gameSet.socketConnexion[request.body.name]
-          ) {
+          gameSet.scoresMongo = documents;
+          //request.body.name === gameSet.socketConnexion[request.body.name] &&
+          console.log(Object.keys(gameSet.socketConnexion).length);
+          if (Object.keys(gameSet.socketConnexion).length < 3) {
             return response.render("game", {
               title: "Bienvenue au jeu",
               scores: documents || [],
             });
           } else {
             return response.render("index", {
-              title: "Veuillez vous connecter pour jouer",
+              title: "Veuillez patienter la salle de jeu est pleine",
             });
           }
         });
@@ -391,7 +392,10 @@ function beginGame(socket) {
         winner = sorted[0];
         maxScore = sorted[0][1];
       }
-
+      gameSet.scoresMongo.forEach((player) => {
+        console.log("line396", player.nickname);
+        console.log("line396", player.score);
+      });
       //enregistrer scores
       for (const player in allScores) {
         console.log(`${player}: ${allScores[player]}`);
@@ -431,7 +435,7 @@ function beginGame(socket) {
         );
       }
       //ioServer envoie deux fois
-      socket.emit("endGame", { winner, maxScore, allScores });
+      ioServer.emit("endGame", { winner, maxScore, allScores });
     } else {
       ioServer.emit("beginRound", {
         question: gameSet.questions[counterRound].question,
@@ -464,6 +468,14 @@ ioServer.on("connection", (socket) => {
   if (playersConnected.length === 2) {
     beginGame(socket);
   }
+  if (playersConnected.length > 2) {
+    delete gameSet.socketConnexion[currentPlayerNickname];
+    delete gameSet.scores[currentPlayerNickname];
+    return response.render("index", {
+      title: "Il y a déjà deux joueurs connectés",
+    });
+  }
+
   socket.on("disconnect", (data) => {
     delete gameSet.socketConnexion[currentPlayerNickname];
     delete gameSet.scores[currentPlayerNickname];
