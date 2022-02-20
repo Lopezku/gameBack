@@ -4,7 +4,8 @@ html
       div#instructions Vous avez 10 secondes par question. Pas le droit à un appel, au 50/50 ni à votre ultime bafouille... Vous devez être au moins deux pour commencer le jeu!
       img#million(src="/assets/img/gad.gif")
       h1= title
-      
+      each score in scores
+          img(src=score.avatar)
       div#containerPlayers Joueurs connectés :
       ul#players
       div#question Question :

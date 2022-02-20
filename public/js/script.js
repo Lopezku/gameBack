@@ -45,13 +45,14 @@ window.document.addEventListener("DOMContentLoaded", () => {
         optionButton.innerText = option;
         divAnswers.appendChild(optionButton);
 
-        optionButton.addEventListener("click", () => {
+        optionButton.addEventListener("click", (e) => {
           console.log({ playerNickname, counterRound, index });
           optionButton.style.backgroundColor = "#63f05e";
           const buttons = document.querySelectorAll("button");
           buttons.forEach((button) => {
             button.disabled = true;
           });
+          e.preventDefault();
           return socket.emit("sendResponse", {
             playerNickname,
             counterRound,
