@@ -49,7 +49,6 @@ window.document.addEventListener("DOMContentLoaded", () => {
     if (playersConnected.length === 2) {
       questionDiv.innerHTML = question;
       clickOnAnswer = false;
-      //removeAllChildNodes(answers);
       removeAllChildNodes(answers);
       options.forEach((option, index) => {
         const optionButton = window.document.createElement("button");
@@ -76,7 +75,7 @@ window.document.addEventListener("DOMContentLoaded", () => {
   });
   socket.on("endGame", ({ winner, maxScore, allScores }) => {
     removeAllChildNodes(answers);
-
+    removeAllChildNodes(question);
     for (const [player, scorePlayer] of Object.entries(allScores)) {
       console.log(
         "🚀 ~ file: script.js ~ line 80 ~ socket.on ~ allScores",

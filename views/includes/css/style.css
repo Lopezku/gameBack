@@ -6,6 +6,14 @@ body {
   margin: 0;
   padding: 0;
 }
+.main {
+  display: flex;
+  flex-flow: row wrap;
+}
+.main > * {
+  padding: 10px;
+  flex: 1 100%;
+}
 #players,
 #containerPlayers {
   font-size: 1.5em;
@@ -18,16 +26,37 @@ h1,
 #question,
 #containerPlayers,
 h2 {
-  margin-left: 20%;
   font-family: "Quicksand", sans-serif;
   color: #63f05e;
   font-weight: 300;
 }
+#players,
+#containerPlayers,
+h2 {
+  margin-left: 20%;
+}
 h1,
 #question {
-  width: 52%;
   text-align: center;
   font-size: 2.5em;
+}
+#million {
+  position: absolute;
+  top: 42px;
+  left: 71%;
+  width: 22%;
+}
+@media all and (max-width: 700px) {
+  h1,
+  #question {
+    text-align: center;
+    font-size: 1.7em;
+    flex: 1 0 0;
+    margin-left: 40%;
+  }
+  #million {
+    display: none;
+  }
 }
 h2 {
   text-align: center;
@@ -89,7 +118,8 @@ form label {
 #scores,
 #connection,
 ul,
-#instructions #scoreBoard {
+#instructions,
+#scoreBoard {
   width: 67%;
   padding-left: 8%;
   font-family: "Quicksand", sans-serif;
@@ -104,7 +134,7 @@ ul,
   font-size: 1.8em;
 }
 #instructions {
-  font-weight: 30px;
+  font-weight: 1.5em;
   margin: 10px;
   font-family: "Quicksand", sans-serif;
   color: white;
@@ -119,12 +149,7 @@ ul,
 #scores {
   border: 2px solid #ccdbdf;
 }
-#million {
-  position: absolute;
-  top: 42px;
-  left: 71%;
-  width: 22%;
-}
+
 #error {
   width: 50%;
   margin-left: 20%;

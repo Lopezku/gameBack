@@ -152,7 +152,6 @@ app.post("/homeGame", (request, response) => {
                       title: "Password incorrect",
                     });
                   }
-                  //console.log("line 136", gameSet.socketConnexion[nickname]);
                   if (gameSet.socketConnexion[nickname]) {
                     return response.render("index", {
                       title: "Vous êtes déjà connecté dans un autre navigateur",
@@ -185,6 +184,10 @@ app.post("/homeGame", (request, response) => {
                           .limit(5);
                         cursor.toArray((error, documents) => {
                           gameSet.scoresMongo[nickname] = documents.score;
+                          console.log(
+                            "🚀 ~ file: serveur.js ~ line 188 ~ cursor.toArray ~  gameSet.scoresMongo",
+                            gameSet.scoresMongo
+                          );
                           return response.render("homeGame", {
                             title: "Voici le Hall of Fame de ce jeu:",
                             nickname: nickname,
@@ -227,6 +230,10 @@ app.post("/homeGame/game", (request, response) => {
         const cursor = collection.find({});
         cursor.toArray((error, documents) => {
           gameSet.scoresMongo = documents;
+          console.log(
+            "🚀 ~ file: serveur.js ~ line 230 ~ cursor.toArray ~  gameSet.scoresMongo",
+            gameSet.scoresMongo
+          );
           //request.body.name === gameSet.socketConnexion[request.body.name] &&
           console.log(Object.keys(gameSet.socketConnexion).length);
           if (Object.keys(gameSet.socketConnexion).length < 3) {
@@ -339,6 +346,10 @@ app.post("/home", (request, response) => {
         gameSet.socketConnexion[nickname] = { token };
         cursor.toArray((error, documents) => {
           gameSet.scoresMongo[nickname] = documents.score;
+          console.log(
+            "🚀 ~ file: serveur.js ~ line 344 ~ cursor.toArray ~  gameSet.scoresMongo",
+            gameSet.scoresMongo
+          );
           return response.render("homeGame", {
             title: "Inscription bien effectuée",
             nickname,
@@ -396,6 +407,10 @@ function beginGame(socket) {
         console.log("line396", player.nickname);
         console.log("line396", player.score);
       });
+      console.log(
+        "🚀 ~ file: serveur.js ~ line 402 ~ gameSet.scoresMongo.forEach ~  gameSet.scoresMongo",
+        gameSet.scoresMongo
+      );
       //enregistrer scores
       for (const player in allScores) {
         console.log(`${player}: ${allScores[player]}`);

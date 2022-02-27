@@ -1,13 +1,14 @@
 html
   include includes/header.pug
   body
-      div#instructions Vous avez 6 secondes par question. Pas le droit à un appel, au 50/50 ni à votre ultime bafouille... Vous devez être au moins deux pour commencer le jeu!
-      img#million(src="/assets/img/gad.gif")
-      h1= title
-      div#containerPlayers Joueurs connectés :
-      ul#players
-      div#question Question :
-      div#answers
+      div.main
+        div#instructions Vous avez 6 secondes par question. Pas le droit à un appel, au 50/50 ni à votre ultime bafouille... Vous devez être au moins deux pour commencer le jeu!
+        img#million(src="/assets/img/gad.gif")
+        h1= title
+        div#containerPlayers Joueurs connectés :
+        ul#players
+        div#question Question :
+        div#answers
 
           script(src='/socket.io/socket.io.min.js')
           script(src="/assets/js/script.js")
