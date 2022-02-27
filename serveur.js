@@ -5,7 +5,6 @@ const gameSet = {
   port: "7000",
   socketConnexion: {},
   scores: {},
-  scoresMongo: [],
   avatarPlayer: {},
   questions: [
     {
@@ -90,6 +89,8 @@ const gameSet = {
     }, */
   ],
 };
+var beginOfGame;
+var endOfGame;
 let currentRound;
 const mongodb = require("mongodb");
 const express = require("express");
@@ -178,16 +179,8 @@ app.post("/homeGame", (request, response) => {
                       } else {
                         const db = client.db("WebsocketForm");
                         const collection = db.collection("comments");
-                        const cursor = collection
-                          .find({})
-                          .sort({ score: -1 })
-                          .limit(5);
+                        const cursor = collection.find({}).sort({ score: -1 });
                         cursor.toArray((error, documents) => {
-                          gameSet.scoresMongo[nickname] = documents.score;
-                          console.log(
-                            "🚀 ~ file: serveur.js ~ line 188 ~ cursor.toArray ~  gameSet.scoresMongo",
-                            gameSet.scoresMongo
-                          );
                           return response.render("homeGame", {
                             title: "Voici le Hall of Fame de ce jeu:",
                             nickname: nickname,
@@ -229,11 +222,6 @@ app.post("/homeGame/game", (request, response) => {
         const collection = db.collection("comments");
         const cursor = collection.find({});
         cursor.toArray((error, documents) => {
-          gameSet.scoresMongo = documents;
-          console.log(
-            "🚀 ~ file: serveur.js ~ line 230 ~ cursor.toArray ~  gameSet.scoresMongo",
-            gameSet.scoresMongo
-          );
           //request.body.name === gameSet.socketConnexion[request.body.name] &&
           console.log(Object.keys(gameSet.socketConnexion).length);
           if (Object.keys(gameSet.socketConnexion).length < 3) {
@@ -345,11 +333,6 @@ app.post("/home", (request, response) => {
 
         gameSet.socketConnexion[nickname] = { token };
         cursor.toArray((error, documents) => {
-          gameSet.scoresMongo[nickname] = documents.score;
-          console.log(
-            "🚀 ~ file: serveur.js ~ line 344 ~ cursor.toArray ~  gameSet.scoresMongo",
-            gameSet.scoresMongo
-          );
           return response.render("homeGame", {
             title: "Inscription bien effectuée",
             nickname,
@@ -403,14 +386,7 @@ function beginGame(socket) {
         winner = sorted[0];
         maxScore = sorted[0][1];
       }
-      gameSet.scoresMongo.forEach((player) => {
-        console.log("line396", player.nickname);
-        console.log("line396", player.score);
-      });
-      console.log(
-        "🚀 ~ file: serveur.js ~ line 402 ~ gameSet.scoresMongo.forEach ~  gameSet.scoresMongo",
-        gameSet.scoresMongo
-      );
+
       //enregistrer scores
       for (const player in allScores) {
         console.log(`${player}: ${allScores[player]}`);
@@ -428,22 +404,22 @@ function beginGame(socket) {
               //db.comments.updateOne({nickname:"red"},{$set:{score:allScores[player]}})
               collection.updateOne(
                 { nickname: player },
-                {
-                  $set: {
-                    score: {
-                      $cond: {
-                        if: { $lte: ["$score", allScores[player]] },
-                        then: allScores[player],
-                      },
-                    },
-                    date: {
-                      $cond: {
-                        if: { $gte: ["$score", allScores[player]] },
-                        then: new Date().toLocaleString("fr-FR"),
+
+                [
+                  {
+                    $set: {
+                      score: {
+                        $cond: [
+                          {
+                            $lte: ["$score", allScores[player]],
+                          },
+                          allScores[player],
+                          "$score",
+                        ],
                       },
                     },
                   },
-                }
+                ]
               );
             }
           }
@@ -468,6 +444,8 @@ ioServer.on("connection", (socket) => {
   ioServer.to(socket.id).emit("requestNickname");
 
   socket.on("responseNickname", (data) => {
+    beginOfGame = new Date();
+    console.log("begin game", beginOfGame);
     gameSet.scores[data.playerNickname] = 0;
     currentPlayerNickname = data.playerNickname;
     ioServer.emit("listPlayer", Object.keys(gameSet.socketConnexion));
@@ -494,6 +472,9 @@ ioServer.on("connection", (socket) => {
   socket.on("disconnect", (data) => {
     delete gameSet.socketConnexion[currentPlayerNickname];
     delete gameSet.scores[currentPlayerNickname];
+    endOfGame = new Date();
+    let durationGame = (endOfGame - beginOfGame) / 1000;
+    console.log("durée en secondes", durationGame);
     ioServer.emit("listPlayer", Object.keys(gameSet.socketConnexion));
   });
 });
