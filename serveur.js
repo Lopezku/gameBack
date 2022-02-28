@@ -5,7 +5,8 @@ const gameSet = {
   port: "7000",
   socketConnexion: {},
   scores: {},
-  avatarPlayer: {},
+  beginGame: {},
+  durationGameByPlayer: {},
   questions: [
     {
       question: "Qui est Charlemagne?",
@@ -389,7 +390,6 @@ function beginGame(socket) {
 
       //enregistrer scores
       for (const player in allScores) {
-        console.log(`${player}: ${allScores[player]}`);
         mongodb.MongoClient.connect(
           process.env.URL_MONGO,
           {
@@ -445,7 +445,9 @@ ioServer.on("connection", (socket) => {
 
   socket.on("responseNickname", (data) => {
     beginOfGame = new Date();
+
     console.log("begin game", beginOfGame);
+    gameSet.beginGame[data.playerNickname] = beginOfGame;
     gameSet.scores[data.playerNickname] = 0;
     currentPlayerNickname = data.playerNickname;
     ioServer.emit("listPlayer", Object.keys(gameSet.socketConnexion));
@@ -473,8 +475,46 @@ ioServer.on("connection", (socket) => {
     delete gameSet.socketConnexion[currentPlayerNickname];
     delete gameSet.scores[currentPlayerNickname];
     endOfGame = new Date();
-    let durationGame = (endOfGame - beginOfGame) / 1000;
-    console.log("durée en secondes", durationGame);
+    let durationGame =
+      (endOfGame - gameSet.beginGame[currentPlayerNickname]) / 1000;
+    gameSet.durationGameByPlayer[currentPlayerNickname] = Math.floor(
+      durationGame / 60
+    );
+    console.log(
+      "🚀 ~ file: serveur.js ~ line 484 ~ socket.on ~ gameSet.durationGameByPlayer",
+      gameSet.durationGameByPlayer
+    );
+    //enregistrer scores
+    for (const durationByPlayer in gameSet.durationGameByPlayer) {
+      mongodb.MongoClient.connect(
+        process.env.URL_MONGO,
+        {
+          useUnifiedTopology: true,
+        },
+        (error, client) => {
+          if (error) {
+            console.error(error);
+          } else {
+            const db = client.db("WebsocketForm");
+            const collection = db.collection("comments");
+            collection.updateOne({ nickname: durationByPlayer }, [
+              {
+                $set: {
+                  gamingTime: {
+                    $add: [
+                      "$gamingTime",
+                      gameSet.durationGameByPlayer[durationByPlayer],
+                    ],
+                  },
+                },
+              },
+            ]);
+          }
+        }
+      );
+    }
+    /*  delete gameSet.beginGame[currentPlayerNickname];
+    delete gameSet.durationGameByPlayer[currentPlayerNickname]; */
     ioServer.emit("listPlayer", Object.keys(gameSet.socketConnexion));
   });
 });
