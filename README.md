@@ -8,6 +8,6 @@ Dès qu'un deuxième joueur se connecte, vous pouvez jouer. Que le meilleur gagn
 <p>Le jeu a été fait en PUG, css et JS. J'ai utilisé socket.io pour le jeu en temps réel et <strong>Mongo Cloud Atlas </strong>pour sauvegarder les données des joueurs: <strong>pseudonyme, mot de passe crypté, date d'inscription, score maximum (uniquement), durée de jeu (cumulée)</strong>.
 Les variables d'environnement sont dans le <strong>fichier .env</strong>. Si vous installez le jeu en local alors vous devez juste vous placer à la racine du jeu (là où est le README.md), faire <code>npm i</code>
 Puis changer les <strong>urls heroku par localhost</strong> si vous voulez le tester en local.
-</p>
+<code>npm start</code>, vous permettra de lancer le jeu en localhost.</p>
 <p>Source pour les questions: Alsacréations</p>
 <p>Pour le code: Node, Stackoverflow, MDN et Socket.io</p>
