@@ -9,7 +9,7 @@ const gameSet = {
   durationGameByPlayer: {},
   questions: [
     {
-      question: "Qui est Charlemagne?",
+      question: "Qui était Charlemagne?",
       options: ["un peintre", "un empereur", "un clown", "un pompier"],
       answer: 1,
     },
