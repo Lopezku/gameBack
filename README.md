@@ -1,6 +1,6 @@
 <h1>Bienvenue A qui veut gagner de l'argent en masse</h1>
 <p>Le principe est simple. Vous devez répondre à 10 questions de type QCM sur la culture générale, le JS et un peu de tout...
-Pour cela, vous devez lancer le jeu sur <a href="https://jeromegame.herokuapp.com/">https://jeromegame.herokuapp.com/</a>
+Pour cela, vous devez lancer le jeu sur <a href="http://jeromegame.herokuapp.com/">http://jeromegame.herokuapp.com/</a>
 Le jeu est <strong>limité à deux joueurs</strong>. Dès qu'un joueur se connecte, un message lui indique qu'il doit attendre un autre joueur pour jouer en temps réel.
 Dès qu'un deuxième joueur se connecte, vous pouvez jouer. Que le meilleur gagne!
 </p>
