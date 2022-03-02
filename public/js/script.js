@@ -13,7 +13,7 @@ window.document.addEventListener("DOMContentLoaded", () => {
   const playerNickname = localStorage.getItem("nickname");
   const playerToken = localStorage.getItem("token");
   // On créé une instance de WebSocket
-  const socket = io("http://jeromegame.herokuapp.com:3000/");
+  const socket = io("https://jeromegame.herokuapp.com:3000/");
   socket.on("requestNickname", () => {
     socket.emit("responseNickname", { playerNickname, playerToken });
   });

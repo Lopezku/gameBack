@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const gameSet = {
-  host: "http://jeromegame.herokuapp.com/",
+  host: "https://jeromegame.herokuapp.com/",
   port: "3000",
   socketConnexion: {},
   scores: {},
