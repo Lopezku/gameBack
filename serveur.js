@@ -28,7 +28,7 @@ const gameSet = {
       ],
       answer: 3,
     },
-    /* {
+    {
       question: "Qu'est-ce qu'un Physarum polycephalum?",
       options: [
         "un champignon",
@@ -87,7 +87,7 @@ const gameSet = {
       question: "Qui a dit 'Solide comme un roc'?",
       options: ["Faudel", "Goldman", "Depardieu", "Nadiya"],
       answer: 3,
-    }, */
+    },
   ],
 };
 var beginOfGame;
@@ -485,36 +485,34 @@ ioServer.on("connection", (socket) => {
       gameSet.durationGameByPlayer
     );
     //enregistrer scores
-    for (const durationByPlayer in gameSet.durationGameByPlayer) {
-      mongodb.MongoClient.connect(
-        process.env.URL_MONGO,
-        {
-          useUnifiedTopology: true,
-        },
-        (error, client) => {
-          if (error) {
-            console.error(error);
-          } else {
-            const db = client.db("WebsocketForm");
-            const collection = db.collection("comments");
-            collection.updateOne({ nickname: durationByPlayer }, [
-              {
-                $set: {
-                  gamingTime: {
-                    $add: [
-                      "$gamingTime",
-                      gameSet.durationGameByPlayer[durationByPlayer],
-                    ],
-                  },
+    mongodb.MongoClient.connect(
+      process.env.URL_MONGO,
+      {
+        useUnifiedTopology: true,
+      },
+      (error, client) => {
+        if (error) {
+          console.error(error);
+        } else {
+          const db = client.db("WebsocketForm");
+          const collection = db.collection("comments");
+          collection.updateOne({ nickname: currentPlayerNickname }, [
+            {
+              $set: {
+                gamingTime: {
+                  $add: [
+                    "$gamingTime",
+                    gameSet.durationGameByPlayer[currentPlayerNickname],
+                  ],
                 },
               },
-            ]);
-          }
+            },
+          ]);
         }
-      );
-    }
-    /*  delete gameSet.beginGame[currentPlayerNickname];
-    delete gameSet.durationGameByPlayer[currentPlayerNickname]; */
+      }
+    );
+    //delete gameSet.beginGame[currentPlayerNickname];
+    //delete gameSet.durationGameByPlayer[currentPlayerNickname];
     ioServer.emit("listPlayer", Object.keys(gameSet.socketConnexion));
   });
 });
