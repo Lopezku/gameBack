@@ -112,6 +112,7 @@ const router = express.Router();
 const server = require("http").createServer(app);
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.options("*", cors());
 // On utilise le moteur de rendu pug
 app.set("view engine", "pug");
 // on indique que chaque url qui commence par /assets trouvera

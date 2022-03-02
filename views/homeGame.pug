@@ -5,7 +5,7 @@ html
     h1= title
     form(action='/homeGame/game' method='post')
       input(type='submit' id='btnSubmit' name="nickname" value='Jouez au jeu')
-    p#connection='Hello gamer: '+nickname + ". Voici les 5 meilleurs scores des autres joueurs"
+    p#connection='Hello gamer: '+nickname + ". Voici les stats des autres joueurs"
     div(id="scores")
       each score in scores
         p
