@@ -1,5 +1,5 @@
 {
-  "name": "chat-avec-module-websocket",
+  "name": "jeu-temps-reel-jerome-lopez",
   "version": "1.0.0",
   "description": "",
   "main": "serveur.js",
@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "Sami Radi",
+  "author": "Jérôme Lopez",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -24,7 +24,6 @@
     "randomcolor": "^0.6.2",
     "socket.io": "^4.4.1",
     "socketio-jwt": "^4.6.2",
-    "uuid": "^8.3.2",
     "websocket": "^1.0.34"
   },
   "devDependencies": {
