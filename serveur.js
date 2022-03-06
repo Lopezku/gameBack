@@ -14,19 +14,19 @@ const gameSet = {
       answer: 1,
     },
     {
-      question: "Qui est pascal OP?",
-      options: ["un escroc", "un empereur", "un clown", "un pompier"],
-      answer: 0,
+      question: "Qui est Krusty?",
+      options: ["un escroc", "un dessert", "un clown", "un poulet frit"],
+      answer: 2,
     },
     {
-      question: "Qui a volé l'orange du marchand?",
+      question: "Lequel de ces surnoms de roi de France n'a jamais existé?",
       options: [
-        "Jean-Michel",
-        "un empereur",
-        "un clown",
-        "Maigret est sur le coup",
+        "Æthelred le Malavisé",
+        "Clodion le Chevelu",
+        "Charles le grimpeur",
+        "Louis le Sauteur",
       ],
-      answer: 3,
+      answer: 2,
     },
     {
       question: "Qu'est-ce qu'un Physarum polycephalum?",
@@ -66,7 +66,7 @@ const gameSet = {
         "Les trappeurs d'hier",
         "Tillamook Cheesemakers",
       ],
-      answer: 3,
+      answer: 2,
     },
     {
       question: "Depuis quand sont disponibles les arrow functions ?",
@@ -84,8 +84,13 @@ const gameSet = {
       answer: 2,
     },
     {
-      question: "Qui a dit 'Solide comme un roc'?",
-      options: ["Faudel", "Goldman", "Depardieu", "Nadiya"],
+      question: "Quel nom de ville n'existe pas?",
+      options: [
+        "Anus (Yonne)",
+        "Le Fion (Haute-Savoie)",
+        "Trécon (Marne)",
+        "Confini (Oise)",
+      ],
       answer: 3,
     },
   ],
@@ -378,7 +383,7 @@ const ioServer = new Server(httpServer, {
 
 function beginGame(socket) {
   let counterRound = 0;
-  const idInterval = setInterval(sendRound, 3000);
+  const idInterval = setInterval(sendRound, 8000);
   function sendRound() {
     if (counterRound === gameSet.questions.length) {
       clearInterval(idInterval);
