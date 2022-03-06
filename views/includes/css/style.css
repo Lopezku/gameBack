@@ -57,6 +57,7 @@ h1 {
     font-size: 1.6em;
     flex: 1 0 0;
     margin-left: 35%;
+    margin-top: 20%;
   }
   #million {
     display: none;
