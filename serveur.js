@@ -357,7 +357,8 @@ app.get("/*", (request, response) => {
   });
 });
 const httpServer = server.listen(process.env.PORT, () => {
-  console.log(`application is running at: ${gameSet.host}:${process.env.PORT}`);
+  //${gameSet.host}:
+  console.log(`application is running at: ${process.env.PORT}`);
 });
 
 /**
