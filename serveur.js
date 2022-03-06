@@ -368,7 +368,12 @@ const httpServer = server.listen(process.env.PORT, () => {
 // convert a connect middleware to a Socket.IO middleware
 const io = require("socket.io");
 const Server = io.Server;
-const ioServer = new Server(httpServer);
+const ioServer = new Server(httpServer, {
+  cors: {
+    origin: "https://jeromegame.herokuapp.com/",
+    methods: ["GET", "POST"],
+  },
+});
 //const uuid = require("uuid");
 
 function beginGame(socket) {
