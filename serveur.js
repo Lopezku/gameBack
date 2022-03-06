@@ -370,7 +370,7 @@ const io = require("socket.io");
 const Server = io.Server;
 const ioServer = new Server(httpServer, {
   cors: {
-    origin: "https://jeromegame.herokuapp.com/",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
