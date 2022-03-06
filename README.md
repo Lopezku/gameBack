@@ -2,7 +2,7 @@
 <p>Le principe est simple. Vous devez répondre à 10 questions de type QCM sur la culture générale, le JS et un peu de tout...
 Pour cela, vous devez lancer le jeu sur <a href="https://jeromegame.herokuapp.com/">https://jeromegame.herokuapp.com/</a>
 Le jeu est <strong>limité à deux joueurs</strong>. Dès qu'un joueur se connecte, un message lui indique qu'il doit attendre un autre joueur pour jouer en temps réel.
-Dès qu'un deuxième joueur se connecte, vous pouvez jouer. Que le meilleur gagne!
+Dès qu'un deuxième joueur se connecte, vous pouvez jouer. Que le meilleur gagne! 10 points par bonne réponse. Pourrez battre le record de sol et hulk?
 </p>
 <p>Si vous n'êtes pas inscrit, créez-vous un profil avec <strong>un Pseudonyme, un mot de passe et la couleur de votre avatar (4 possibles)</strong>. Une fois connecté(e), vous pourrez voir le tableau des scores de tous les participants par ordre décroissant avec le nombre de points, la date d'inscription et le nombre de minutes connectés au jeu.</p>
 <p>Le jeu a été fait en PUG, css et JS. J'ai utilisé socket.io pour le jeu en temps réel et <strong>Mongo Cloud Atlas </strong>pour sauvegarder les données des joueurs: <strong>pseudonyme, mot de passe crypté, date d'inscription, score maximum (uniquement), durée de jeu (cumulée)</strong>.
