@@ -54,9 +54,9 @@ h1 {
     display: none;
   }
   #question {
-    font-size: 1.6em;
+    font-size: 1.5em;
     flex: 1 0 0;
-    margin-left: 15%;
+    margin-left: 7%;
     margin-top: 20%;
   }
   #million {
