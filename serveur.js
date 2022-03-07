@@ -95,9 +95,8 @@ const gameSet = {
     },
   ],
 };
-var beginOfGame;
-var endOfGame;
-let currentRound;
+let beginOfGame;
+let endOfGame;
 const mongodb = require("mongodb");
 const express = require("express");
 const cors = require("cors");
