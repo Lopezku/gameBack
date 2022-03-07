@@ -9,5 +9,5 @@ Dès qu'un deuxième joueur se connecte, vous pouvez jouer. Que le meilleur gagn
 Les variables d'environnement sont dans le <strong>fichier .env</strong>. Si vous installez le jeu en local alors vous devez juste vous placer à la racine du jeu (là où est le README.md), faire <code>npm i</code>
 Puis changer les <strong>urls heroku par localhost</strong> si vous voulez le tester en local.
 <code>npm start</code>, vous permettra de lancer le jeu en localhost.</p>
-<p>Source pour les questions: Alsacréations</p>
+<p>Source pour les questions et les images: Alsacréations et https://iconarchive.com/</p>
 <p>Pour le code: Node, Stackoverflow, MDN et Socket.io</p>
