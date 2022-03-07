@@ -49,7 +49,7 @@ const gameSet = {
       answer: 1,
     },
     {
-      question: "Quelle ville est la plus élevé en altitude ?",
+      question: "Quelle ville est la plus élevée en altitude ?",
       options: [
         "Cuzco-Pérou",
         "Shigatsé-Chine",
