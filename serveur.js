@@ -19,11 +19,11 @@ const gameSet = {
       answer: 2,
     },
     {
-      question: "Lequel de ces surnoms de roi de France n'a jamais existé?",
+      question: "Un de ces surnoms de rois n'a jamais existé?",
       options: [
         "Æthelred le Malavisé",
         "Clodion le Chevelu",
-        "Charles le grimpeur",
+        "Charles le Grimpeur",
         "Louis le Sauteur",
       ],
       answer: 2,
@@ -69,7 +69,7 @@ const gameSet = {
       answer: 2,
     },
     {
-      question: "Depuis quand sont disponibles les arrow functions ?",
+      question: "Les arrow functions sont disponibles depuis?",
       options: [
         " JavaScript 1.7",
         "ECMAScript 6",
